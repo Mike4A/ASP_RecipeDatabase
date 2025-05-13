@@ -1,3 +1,5 @@
+using System.Data.SqlTypes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,5 +25,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "HelpFAQ",
+    pattern: "the-recipe-database-faq-page",
+    defaults: new { controller = "Help", action = "FAQ" });
 
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlTypes;
 
 namespace RecipeDatabase.Controllers
 {
@@ -15,7 +16,8 @@ namespace RecipeDatabase.Controllers
                     idParameterText = " The id parameter was supplied, and it's value was carrot.";
                 }
             }
-            return Content("Hello! Here is the FAQ." + idParameterText);
+            ViewBag.ParameterText = idParameterText;
+            return View();
         }
     }
 }
