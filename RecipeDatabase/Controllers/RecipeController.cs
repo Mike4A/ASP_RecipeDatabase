@@ -15,9 +15,13 @@ namespace RecipeDatabase.Controllers
             _context = context;
         }
 
-        public IActionResult Recipes()
+        public IActionResult Recipes(string searchString)
         {
             var recipes = from r in _context.Recipes select r;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                recipes = recipes.Where(s => s.Name.ToLower().Contains(searchString.ToLower()));
+            }
             return View(recipes);
         }
 

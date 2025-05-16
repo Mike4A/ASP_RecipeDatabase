@@ -1,10 +1,27 @@
 ﻿@model IQueryable<Recipe>
 @{
     ViewBag.Title = "Recipes";
+    string? searchString = Context.Request.Query["searchString"];
 }
 
 <div class="container my-4">
     <h1 class="mb-3">Recipes</h1>
+    <!-- Search form -->
+    <form method="get"
+          class="form-inline mb-3">
+        <div class="form-group mb-2">
+            <input type="text"
+                   name="searchString"
+                   class="form-control"
+                   placeholder="Search Recipes"
+                   value="@searchString" />
+        </div>
+        <button type="submit"
+                class="btn btn-primary">
+            Search
+        </button>
+    </form>
+
     <!-- Recipes List -->
     <div class="row">
         @foreach (var recipe in Model)
