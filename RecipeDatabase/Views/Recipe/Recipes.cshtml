@@ -1,0 +1,27 @@
+﻿@model IQueryable<Recipe>
+@{
+    ViewBag.Title = "Recipes";
+}
+
+<div class="container my-4">
+    <h1 class="mb-3">Recipes</h1>
+    <!-- Recipes List -->
+    <div class="row">
+        @foreach (var recipe in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img class="card-img-top"
+                         src="@recipe.ImagePath"
+                         alt="@recipe.Name">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@recipe.Name</h5>
+                        <p class="card-text">@recipe.Description</p>
+                        <a href="@Url.Action("Recipe", "Recipe", new { id = recipe.Id })" class="btn btn-primary mt-auto">View Recipe</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
