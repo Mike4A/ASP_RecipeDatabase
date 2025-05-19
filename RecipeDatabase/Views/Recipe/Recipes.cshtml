@@ -1,14 +1,12 @@
-﻿@model IQueryable<Recipe>
+﻿@model RecipeDatabase.Models.RecipeSearchViewModel
 @{
-    ViewBag.Title = "Recipes";
-    string? searchString = Context.Request.Query["searchString"];
+    ViewBag.Title = "Recipes"; string searchString = Context.Request.Query["searchString"]!;
 }
-
 <div class="container my-4">
     <h1 class="mb-3">Recipes</h1>
     <!-- Search form -->
-    <form method="get"
-          class="form-inline mb-3">
+
+    <form method="get" class="form-inline mb-3">
         <div class="form-group mb-2">
             <input type="text"
                    name="searchString"
@@ -16,15 +14,22 @@
                    placeholder="Search Recipes"
                    value="@searchString" />
         </div>
+        <div class="form-group mb-2">
+            <select class="form-control"
+                    asp-items="Model.Categories"
+                    name="recipeCategory">
+                <option value="">All Categories</option>
+            </select>
+        </div>
         <button type="submit"
                 class="btn btn-primary">
             Search
         </button>
     </form>
-
+    <div class="mb-2"> @Model.Recipes!.Count recipes returned. </div>
     <!-- Recipes List -->
     <div class="row">
-        @foreach (var recipe in Model)
+        @foreach (var recipe in Model.Recipes)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
@@ -34,7 +39,8 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">@recipe.Name</h5>
                         <p class="card-text">@recipe.Description</p>
-                        <a href="@Url.Action("Recipe", "Recipe", new { id = recipe.Id })" class="btn btn-primary mt-auto">View Recipe</a>
+                        <a href="@Url.Action("Recipe", "Recipe", new { id = recipe.Id })"
+                           class="btn btn-primary mt-auto">View Recipe</a>
                     </div>
                 </div>
             </div>

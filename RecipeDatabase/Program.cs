@@ -24,7 +24,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
     // Ensure the database is created and migrated
-    context.Database.Migrate();
+    // context.Database.Migrate();
     // Seed the database
     DbInitializer.Initialize(services);
 }
