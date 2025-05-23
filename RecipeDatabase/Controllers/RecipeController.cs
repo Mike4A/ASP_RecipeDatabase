@@ -6,6 +6,7 @@ using RecipeDatabase.Models;
 using SQLitePCL;
 using System.Data.SqlTypes;
 using System.Globalization;
+using static System.Net.Mime.MediaTypeNames;
 namespace RecipeDatabase.Controllers
 {
 
@@ -52,6 +53,51 @@ namespace RecipeDatabase.Controllers
             {
                 return NotFound();
             }
+            return View(recipe);
+        }
+
+        public IActionResult Create()
+        {
+            WriteCategoriesIntoViewData();
+            return View();
+        }
+
+        private void WriteCategoriesIntoViewData()
+        {
+            IQueryable<string> categoryQuery = from r in _context.Recipes​
+                                               where r.Category != string.Empty
+                                               orderby r.Category
+                                               select r.Category;
+            var categories = categoryQuery.Distinct().ToList().Select(
+                c => new SelectListItem { Value = c, Text = c });
+            ViewData["Categories"] = categories;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create([Bind("Name, Slug, Category, ImagePath, Description, RecipeInstructions")] Recipe recipe,
+            IFormFile ImagePath)
+        {
+            if (ModelState.IsValid)
+            {
+                if (ImagePath != null && ImagePath.Length > 0)
+                {
+                    var fileName = Path.GetFileName(ImagePath.FileName);
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot/images", fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImagePath.CopyTo(fileStream);
+                    }
+                    // Save the file path relative to the wwwroot
+                    recipe.ImagePath = $"/images/{fileName}";
+                }
+                _context.Add(recipe);
+                _context.SaveChanges();
+                return RedirectToAction("Recipe", "Recipe", new { id = recipe.Id });
+            }
+            WriteCategoriesIntoViewData();
             return View(recipe);
         }
     }
